@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define N 100005
+#define pb push_back
+vector<int> adj[N];
+bool odd_cycle=false;
+int visited[N];
+//function to add edge
+void add_edge(int x,int y){
+    //as graph is bi-directional
+    adj[x].pb(y);
+    adj[y].pb(x);
+}
+void dfs(int cur,int par,int col){
+    visited[cur]=col;
+    for(auto child:adj[cur]){
+        if(visited[child]==0){
+            dfs(child,cur,3-col);//take visited array as three states 0 1 2
+        }
+        //backedge encounters
+        else if(child!=par){
+            if(visited[child]==col){
+                odd_cycle=true;
+            }
+        }
+    }
+}
+int main(){
+    add_edge(1,2);
+    add_edge(2,3);
+    add_edge(3,1);
+    add_edge(3,4);
+    add_edge(4,5);
+    dfs(1,0,1);
+    if(odd_cycle){
+        cout<<"Not a bipartite graph";
+    }
+    else{
+        cout<<"Yes it is a bipartite graph";
+    }
+    return 0;
+}
